@@ -11,7 +11,7 @@ public class Data extends Referencia {
 
     static {
         limites.put(1, 31);
-        limites.put(2, 28); // Considerando apenas anos comuns
+        limites.put(2, 28); // Fevereiro pode ser 29 se for ano bissexto
         limites.put(3, 31);
         limites.put(4, 30);
         limites.put(5, 31);
@@ -26,27 +26,38 @@ public class Data extends Referencia {
 
     public Data(int ano, int mes, int dia) {
         this.ano = Math.max(1970, ano);
-        this.mes = Math.min(12, Math.max(1, mes));
-        this.dia = Math.min(limites.get(this.mes), Math.max(1, dia));
+        this.mes = Math.max(1, Math.min(12, mes));
+        this.dia = Math.max(1, Math.min(getDiasNoMes(this.ano, this.mes), dia));
     }
 
-    @Override
+    private boolean ehBissexto(int ano) {
+        return (ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0);
+    }
+
+    private int getDiasNoMes(int ano, int mes) {
+        if (mes == 2 && ehBissexto(ano)) {
+            return 29;
+        }
+        return limites.get(mes);
+    }
+
+
     public int comoInteiro() {
         int totalDias = 0;
 
-        // Adicionando os anos completos desde 1970
+        // Contar os dias completos de anos anteriores
         for (int i = 1970; i < ano; i++) {
-            totalDias += 365;
+            totalDias += ehBissexto(i) ? 366 : 365;
         }
 
-        // Adicionando os meses completos do ano corrente
+        // Contar os dias completos dos meses do ano atual
         for (int i = 1; i < mes; i++) {
-            totalDias += limites.get(i);
+            totalDias += getDiasNoMes(ano, i);
         }
 
-        // Adicionando os dias do mês atual
-        totalDias += dia - 1;
+        // Contar os dias do mês atual
+        totalDias += dia;
 
-        return totalDias;
+        return totalDias - 1; // Ajuste para começar do dia 0 em 01/01/1970
     }
 }

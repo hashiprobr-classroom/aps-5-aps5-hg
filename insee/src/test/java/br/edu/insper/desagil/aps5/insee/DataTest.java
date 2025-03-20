@@ -19,7 +19,7 @@ class DataTest {
     @Test
     void atualizaMaior() {
         Data data = new Data(2024, 13, 32);
-        assertEquals(19978, data.comoInteiro());
+        assertEquals(20088, data.comoInteiro()); // Ajuste no valor esperado
     }
 
     @Test
@@ -31,6 +31,6 @@ class DataTest {
     @Test
     void comoAgora() {
         Data data = new Data(2024, 9, 26);
-        assertEquals(19978, data.comoInteiro());
+        assertEquals(19992, data.comoInteiro()); // Ajuste no valor esperado
     }
 }
